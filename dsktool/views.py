@@ -1063,6 +1063,10 @@ def updateUsers(request):
 def sortDsk(dsks, sortBy):
     return sorted(dsks, key=lambda x: x[sortBy])
 
+# [DONE] Sorts the Course Roles list
+def sortCourseRoles(crs, sortBy):
+    return sorted(crs, key=lambda x: x[sortBy])
+
 # [DONE]
 def guestusernotallowed(request):
     context = {
@@ -1261,6 +1265,7 @@ def getCourseMemberships(request):
     context = {
         'memberships_json': membershipsResultJSON,
         'dsks_json': dsks,
+        'crs_json': build_course_roles_option(BB),
     }
 
     return JsonResponse(context)
@@ -1469,7 +1474,9 @@ def getCourseMembership(request):
             member_json['crsSearchBy'] = crsSearchBy
             member_json['usrToSearchFor'] = usrToSearchFor
             member_json['usrSearchBy'] = usrSearchBy
+            
             logging.info("updated member_json: \n", member_json)
+            
             dskresp = BB.GetDataSources(
                 limit=5000, params={'fields': 'id, externalId'}, sync=True)
             dsks_json = dskresp.json()
@@ -1481,6 +1488,7 @@ def getCourseMembership(request):
             context = {
                 'member_json': member_json,
                 'dsks_json': dsks,
+                'crs_json': build_course_roles_option(BB),
             }
         else:
             error_json = membership_result.json()
@@ -1496,6 +1504,7 @@ def getCourseMembership(request):
             'is_found': True,
             'memberships_json': member_json,
             'dsks_json': dsks,
+            'crs_json': build_course_roles_option(BB),
         }
 
         return JsonResponse(data)
@@ -1579,6 +1588,7 @@ def getCourseMemberships(request):
             'is_found': True,
             'memberships_json': membershipsResultJSON,
             'dsks_json': dsks,
+            'crs_json': build_course_roles_option(BB),
         }
 
         return JsonResponse(context)
@@ -1944,6 +1954,7 @@ def getUserMemberships(request):
         'is_found': True,
         'memberships_json': membershipsResultJSON,
         'dsks_json': dsks,
+        'crs_json': build_course_roles_option(BB),
     }
 
     return JsonResponse(context)
@@ -2546,6 +2557,42 @@ def getDataSourceKeys(request):
 
     return JsonResponse(context)
 
+# [DONE] Retrieve the list of Course Roles
+def getCourseRoles(request):
+    context = None
+
+    logging.debug(f'getCourseRoles request:\n {request}')
+
+    BB = getBBRest(request)
+
+    resp = BB.GetCourseRoles(
+        limit=5000, params={'fields': 'id, roleId, nameForCourses, availability'}, sync=True)
+
+    isFoundStatus = False
+    if (resp.status_code == 200):
+        result_json = resp.json()  # return actual error
+
+        logging.debug(f'GET CRS RESP: \n {resp.json()}')
+        logging.debug(f'CRS COUNT: {len(result_json["results"])}')
+
+        crs = result_json["results"]
+
+        isFoundStatus = True
+
+        context = {
+            "is_found": isFoundStatus,
+            'result_json': crs,
+        }
+    else:
+        error_json = resp.json()
+        logging.debug(f'ERROR RESPONSE:\n {error_json}')
+        context = {
+            "is_found": isFoundStatus,
+            'error_json': error_json,
+        }
+
+    return JsonResponse(context)
+
 # [DONE] Take a response and refactor, purging unwanted DSKs
 # called by any COLLECTION request requiring availability as a search option e.g. getCourses, getUsers
 #  purgedResults = datasourcePurge(resp, searchValue)
@@ -2873,3 +2920,12 @@ def authnzpage(request):
             request, target='authnzpage')
 
     return response
+
+# [DONE] Build coure roles options for the select input
+def build_course_roles_option(BB):
+    crresp = BB.GetCourseRoles(limit=5000, params={'fields': 'id, roleId, nameForCourses, availability.available'}, sync=True)
+    crs_json = crresp.json()
+    crs = crs_json["results"]
+    crs = sortCourseRoles(crs, 'nameForCourses')
+
+    return crs

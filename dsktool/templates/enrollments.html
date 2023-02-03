@@ -213,6 +213,10 @@
                   <input id="isDataSourceKeyUpdateRequired1" name="isDataSourceKeyUpdateRequired1" type="checkbox" value="true" onclick="setIsProcessable();"/>
                   Data Source Key
                 </th>
+                <th style="padding:10px">
+                  <input id="isRoleUpdateRequired1" name="isRoleUpdateRequired1" type="checkbox" value="true" onclick="setIsProcessable();"/>
+                  User Course Role
+                </th>
               </thead>
               <tbody>
                 <tr>
@@ -228,6 +232,10 @@
                     <select id="selectedDataSourceKey" name="selectedDataSourceKey">
                     <!-- <option>Choose a DSK or use field to right.</option> -->
                   
+                    </select>
+                  </td>
+                  <td style="padding:10px">
+                    <select id="selectedCourseRole" name="selectedCourseRole">
                     </select>
                   </td>
                 </tr>
@@ -341,6 +349,7 @@ $("#searchEnrollmentByCrsandUsrIdByCRSID").change(function () {
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#comment").val('');
 });
 
@@ -359,6 +368,7 @@ $("#searchEnrollmentByCrsandUserIdByUSRID").change(function () {
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#comment").val('');
 });
 
@@ -377,6 +387,7 @@ $("#searchEnrollmentByDSK").change(function () {
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#comment").val('');
 });
 
@@ -395,6 +406,7 @@ $("#searchValueCrstoSearch").change(function(){
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#comment").val('');
   
   var data = {
@@ -448,6 +460,7 @@ $("#searchValueUsrtoSearch").change(function(){
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#comment").val('');
   
 
@@ -499,6 +512,7 @@ $("#searchValue").change(function () {
       $("#isUpdateRequired1").prop("checked", false);
       $("#isAvailabilityUpdateRequired1").prop("checked", false);
       $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+      $("#isRoleUpdateRequired1").prop("checked", false);
       $("#comment").val('');
 
       $.ajax({
@@ -541,6 +555,7 @@ $("#searchByCrsCRSID").change(function () {
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("filterCourseByDSKCheckbox").prop("checked", false);
   $("#userDSKFilterOptions").empty();
   $("#comment").val('');
@@ -560,6 +575,7 @@ $("#searchValueCrs").change(function(){
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#comment").val('');
   // Validate CrsId: call ajax function that validates course ids based on serialized form data
 
@@ -607,6 +623,7 @@ $("#searchValueUsr").change(function(){
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#comment").val('');
   // Validate CrsId: call ajax function that validates course ids based on serialized form data
 
@@ -650,7 +667,9 @@ $('#searchEnrollmentByCrsandUsrForm').on('submit', function(e){
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#selectedDataSourceKey")[0].selectedIndex = 0;
+  $("#selectedCourseRole")[0].selectedIndex = 0;
   $("#comment").val('');
   console.log("submitSearchByCrsAndUser");
 
@@ -739,6 +758,23 @@ $('#searchEnrollmentByCrsandUsrForm').on('submit', function(e){
               }
             }
           }
+
+          var crsOption = '';
+          crsList = data["crs_json"]
+          if (typeof crsList == 'undefined') {
+            alert("No Course Roles were found. Check that you are still logged in by using the Who am I link to the left and logout/login if necessary.");
+          } else {
+            let x = 0;
+            x = document.getElementById("selectedCourseRole").options.length;
+            console.log("selectedCourseRole LENGTH: " + x);
+            if (x == 0) {
+              for ( crs in crsList) {
+                crsOption = '<option value ='+ crsList[crs]['id'] + '>'+ crsList[crs]['nameForCourses'] + '</option>';
+                $('#selectedCourseRole').append(crsOption);
+              }
+            }
+          }
+
           // show pertinent divs
           $("#processBlock").show();
           $("#resultsTable").show();
@@ -746,6 +782,7 @@ $('#searchEnrollmentByCrsandUsrForm').on('submit', function(e){
           $("#isUpdateRequired1").prop("checked", false);
           $("#isAvailabilityUpdateRequired1").prop("checked", false);
           $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+          $("#isRoleUpdateRequired1").prop("checked", false);
           $("#comment").val('');
         }
       }
@@ -766,6 +803,7 @@ $('#searchEnrollmentByCrsForm').on('submit', function(e){
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").checked=false;
+  $("#isRoleUpdateRequired1").checked=false;
   $("#selectedDataSourceKey")[0].selectedIndex = 0;
   $("#comment").val('');
 
@@ -828,6 +866,23 @@ $('#searchEnrollmentByCrsForm').on('submit', function(e){
         }
       }
 
+      var crsOption = '';
+      crsList = responseData["crs_json"]
+
+      if (typeof crsList == 'undefined') {
+        alert("No Course Roles were found. Check that you are still logged in by using the Who am I link to the left and logout/login if necessary.");
+      } else {
+        let x = 0;
+        x = document.getElementById("selectedCourseRole").options.length;
+        console.log("selectedCourseRole LENGTH: " + x);
+        if (x == 0) {
+          for ( crs in crsList) {
+            crsOption = '<option value ='+ crsList[crs]['id'] + '>'+ crsList[crs]['nameForCourses'] + '</option>';
+            $('#selectedCourseRole').append(crsOption);
+          }
+        }
+      }
+
       $("#processBlock").show();
       $("#resultsTable").show();
       $("#searchUpdate").show();
@@ -850,6 +905,7 @@ $('#searchEnrollmentsByUsrForm').on('submit', function(e){
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#selectedDataSourceKey")[0].selectedIndex = 0;
   $("#comment").val('');
 
@@ -910,6 +966,24 @@ $('#searchEnrollmentsByUsrForm').on('submit', function(e){
           }
         }
       }
+
+      var crsOption = '';
+      crsList = responseData["crs_json"]
+      
+      if (typeof crsList == 'undefined') {
+        alert("No Course Roles were found. Check that you are still logged in by using the Who am I link to the left and logout/login if necessary.");
+      } else {
+        let x = 0;
+        x = document.getElementById("selectedCourseRole").options.length;
+        console.log("selectedCourseRole LENGTH: " + x);
+        if (x == 0) {
+          for ( crs in crsList) {
+            crsOption = '<option value ='+ crsList[crs]['id'] + '>'+ crsList[crs]['nameForCourses'] + '</option>';
+            $('#selectedCourseRole').append(crsOption);
+          }
+        }
+      }
+      
       $("#processBlock").show();
       $("#resultsTable").show();
       $("#searchUpdate").show();
@@ -930,6 +1004,7 @@ $('#searchEnrollmentsByDSKForm').on('submit', function(e){
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").checked=false;
+  $("#isRoleUpdateRequired1").checked=false;
 
   var formData = {"searchBy": "DSK",
                   "searchValue": document.getElementById("searchEnrollmentsByDSKForm").dataSourceKeyOptions.value,
@@ -1024,6 +1099,7 @@ $("#searchByUsrUSRID").change(function () {
   $("#isUpdateRequired1").prop("checked", false);
   $("#isAvailabilityUpdateRequired1").prop("checked", false);
   $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+  $("#isRoleUpdateRequired1").prop("checked", false);
   $("#comment").val('');
 });
 
@@ -1044,6 +1120,7 @@ $('#selectCourseForm').on('submit', function(e) {
         $("#isUpdateRequired1").prop("checked", false);
         $("#isAvailabilityUpdateRequired1").prop("checked", false);
         $("#isDataSourceKeyUpdateRequired1").checked=false;
+        $("#isRoleUpdateRequired1").checked=false;
         $("#resultsTable").show();
         $("#searchUpdate").show();
         $.ajax({
@@ -1195,6 +1272,7 @@ $('#processSelectedMembershipsForm').on('submit', function(e) {
       "isAvailabilityUpdateRequired1": document.getElementById("processSelectedMembershipsForm").isAvailabilityUpdateRequired1.checked,
       "selectedAvailability": document.getElementById("processSelectedMembershipsForm").selectedAvailability.value,
       "isDataSourceKeyUpdateRequired1": document.getElementById("processSelectedMembershipsForm").isDataSourceKeyUpdateRequired1.checked,
+      "isRoleUpdateRequired1": document.getElementById("processSelectedMembershipsForm").isRoleUpdateRequired1.checked,
       "selectedDataSourceKey": document.getElementById("processSelectedMembershipsForm").selectedDataSourceKey.value,
       "pmcUserId[]": pmcUserList,
       "crsorusr": activeDiv,
@@ -1293,6 +1371,7 @@ $("#searchValue").change(function () {
       $("#isUpdateRequired1").prop("checked", false);
       $("#isAvailabilityUpdateRequired1").prop("checked", false);
       $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+      $("#isRoleUpdateRequired1").prop("checked", false);
       $("#comment").val('');
       
       $.ajax({
@@ -1353,7 +1432,8 @@ $("#checkAll").click(function(){
 function setIsProcessable() {
   if ((document.getElementById('isUpdateRequired1').checked == true) &&
       (document.getElementById('isAvailabilityUpdateRequired1').checked == true || 
-       document.getElementById('isDataSourceKeyUpdateRequired1').checked == true)) {
+       document.getElementById('isDataSourceKeyUpdateRequired1').checked == true ||
+       document.getElementById('isRoleUpdateRequired1').checked == true)) {
     document.getElementById('processSubmit').disabled=false;
   } else {
     document.getElementById('processSubmit').disabled=true;
@@ -1396,6 +1476,7 @@ function toggleDivs(anyDiv) {
       $("#isUpdateRequired1").prop("checked", false);
       $("#isAvailabilityUpdateRequired1").prop("checked", false);
       $("#isDataSourceKeyUpdateRequired1").prop("checked", false);
+      $("#isRoleUpdateRequired1").prop("checked", false);
       $("#filterCourseByDSKDiv").hide();
       $("#filterUserByDSKDiv").hide();
       $("#filterCourseByDSKCheckbox").prop("checked", false);
