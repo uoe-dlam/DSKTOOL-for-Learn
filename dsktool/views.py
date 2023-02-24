@@ -1121,7 +1121,9 @@ def updateCourseMemberships(request):
         # ----------------------------------------------
 
         for user in userArray:
+            
             payload = {}
+
             if (request.GET.get('isAvailabilityUpdateRequired1')):
                 logging.debug(f'{user} : isAvailabilityUpdateRequired1: {request.GET.get("isAvailabilityUpdateRequired1")}')
 
@@ -1644,7 +1646,9 @@ def updateCourseMembership(request):
 
         # if (request.GET.get('isUpdateRequired1') == 'true'):
         logging.info("isUpdateRequired1", request.GET.get('isUpdateRequired1'))
+
         payload = {}
+
         if (request.GET.get('isAvailabilityUpdateRequired1')):
             logging.info("isAvailabilityUpdateRequired1: ",
                 request.GET.get('isAvailabilityUpdateRequired1'))
@@ -1662,7 +1666,14 @@ def updateCourseMembership(request):
                 payload["dataSourceId"] = request.GET.get('selectedDataSourceKey')
                 logging.info("dataSourceId: ", request.GET.get('selectedDataSourceKey'))
 
-                logging.info("PAYLOAD: \n", payload)
+        if (request.GET.get('isRoleUpdateRequired1')):
+            logging.info("isRoleUpdateRequired1: ",
+                request.GET.get('isRoleUpdateRequired1'))
+
+            if (request.GET.get('isRoleUpdateRequired1') == 'true'):
+                payload["courseRoleId"] = request.GET.get('selectedCourseRole')
+                logging.info("courseRoleId: ", request.GET.get('selectedCourseRole'))
+
 
         # ----------------------------------------------
         # get data BEFORE the change
@@ -2921,10 +2932,10 @@ def authnzpage(request):
 
     return response
 
-# [DONE] Build coure roles options for the select input
+# [DONE] Build course roles options for the select input
 def build_course_roles_option(BB):
-    crresp = BB.GetCourseRoles(limit=5000, params={'fields': 'id, roleId, nameForCourses, availability.available'}, sync=True)
-    crs_json = crresp.json()
+    getCourseRolesResponse = BB.GetCourseRoles(limit=5000, params={'fields': 'id, roleId, nameForCourses, custom, availability.available'}, sync=True)
+    crs_json = getCourseRolesResponse.json()
     crs = crs_json["results"]
     crs = sortCourseRoles(crs, 'nameForCourses')
 

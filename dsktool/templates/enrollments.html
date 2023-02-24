@@ -769,8 +769,16 @@ $('#searchEnrollmentByCrsandUsrForm').on('submit', function(e){
             console.log("selectedCourseRole LENGTH: " + x);
             if (x == 0) {
               for ( crs in crsList) {
-                crsOption = '<option value ='+ crsList[crs]['id'] + '>'+ crsList[crs]['nameForCourses'] + '</option>';
-                $('#selectedCourseRole').append(crsOption);
+                if (crsList[crs]['availability']['available'] === 'Course' || crsList[crs]['availability']['available'] === 'CourseAndOrganization') {
+                crsOption = 
+                  '<option value ="' 
+                  + crsList[crs]['roleId']
+                  + '">'
+                  + crsList[crs]['nameForCourses'] 
+                  + '</option>';
+                  
+                  $('#selectedCourseRole').append(crsOption);
+                }
               }
             }
           }
@@ -877,8 +885,16 @@ $('#searchEnrollmentByCrsForm').on('submit', function(e){
         console.log("selectedCourseRole LENGTH: " + x);
         if (x == 0) {
           for ( crs in crsList) {
-            crsOption = '<option value ='+ crsList[crs]['id'] + '>'+ crsList[crs]['nameForCourses'] + '</option>';
-            $('#selectedCourseRole').append(crsOption);
+            if (crsList[crs]['availability']['available'] === 'Course' || crsList[crs]['availability']['available'] === 'CourseAndOrganization') {
+              crsOption = 
+                '<option value ="' 
+                + crsList[crs]['roleId']
+                + '">'
+                + crsList[crs]['nameForCourses'] 
+                + '</option>';
+                
+                $('#selectedCourseRole').append(crsOption);
+            }
           }
         }
       }
@@ -978,8 +994,16 @@ $('#searchEnrollmentsByUsrForm').on('submit', function(e){
         console.log("selectedCourseRole LENGTH: " + x);
         if (x == 0) {
           for ( crs in crsList) {
-            crsOption = '<option value ='+ crsList[crs]['id'] + '>'+ crsList[crs]['nameForCourses'] + '</option>';
-            $('#selectedCourseRole').append(crsOption);
+            if (crsList[crs]['availability']['available'] === 'Course' || crsList[crs]['availability']['available'] === 'CourseAndOrganization') {
+                crsOption = 
+                  '<option value ="' 
+                  + crsList[crs]['roleId']
+                  + '">'
+                  + crsList[crs]['nameForCourses'] 
+                  + '</option>';
+                  
+              $('#selectedCourseRole').append(crsOption);
+            }
           }
         }
       }
@@ -1272,8 +1296,9 @@ $('#processSelectedMembershipsForm').on('submit', function(e) {
       "isAvailabilityUpdateRequired1": document.getElementById("processSelectedMembershipsForm").isAvailabilityUpdateRequired1.checked,
       "selectedAvailability": document.getElementById("processSelectedMembershipsForm").selectedAvailability.value,
       "isDataSourceKeyUpdateRequired1": document.getElementById("processSelectedMembershipsForm").isDataSourceKeyUpdateRequired1.checked,
-      "isRoleUpdateRequired1": document.getElementById("processSelectedMembershipsForm").isRoleUpdateRequired1.checked,
       "selectedDataSourceKey": document.getElementById("processSelectedMembershipsForm").selectedDataSourceKey.value,
+      "isRoleUpdateRequired1": document.getElementById("processSelectedMembershipsForm").isRoleUpdateRequired1.checked,
+      "selectedCourseRole": document.getElementById("processSelectedMembershipsForm").selectedCourseRole.value,
       "pmcUserId[]": pmcUserList,
       "crsorusr": activeDiv,
        "comment": document.getElementById("processSelectedMembershipsForm").comment.value,
