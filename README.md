@@ -4,8 +4,11 @@ There is a bug in BbRest that hasn't been pached as the package is not maintaine
 To fix update virtualenv/your_app/3.8/lib/python3.8/site-packages/bbrest.py bbrest.py after line 530 make sure you have:
 
 type_str = ""
+
 desc_str = ""
+
 enum_str = ""
+
 items_str = ""
 
 Don't forget to restart your app.
