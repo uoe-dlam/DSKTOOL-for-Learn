@@ -1,7 +1,7 @@
 Important INFO 15.07.2025:
 
 There is a bug in BbRest that hasn't been pached as the package is not maintained.
-To fix update virtualenv/your_app/3.8/lib/python3.8/site-packages/bbrest.py bbrest.py after line 530 make sure you have:
+To fix update virtualenv/your_app/3.8/lib/python3.8/site-packages/bbrest.py after line 530 make sure you have:
 
 type_str = ""
 
