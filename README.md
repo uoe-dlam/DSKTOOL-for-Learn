@@ -1,3 +1,15 @@
+Important INFO 15.07.2025:
+
+There is a bug in BbRest that hasn't been pached as the package is not maintained.
+To fix update virtualenv/your_app/3.8/lib/python3.8/site-packages/bbrest.py bbrest.py after line 530 make sure you have:
+
+type_str = ""
+desc_str = ""
+enum_str = ""
+items_str = ""
+
+Don't forget to restart your app.
+
 # DSKTOOL for Learn v1.2.8 (11/12/2022)
 
 See [Release Notes](#Release-Notes) below.
